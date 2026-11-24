@@ -1,0 +1,5 @@
+IMPORTANT: This GitHub Pages website contains the current Android LicenseManager SECRET_KEY in client-side JavaScript so that the public browser generator can match the existing app.
+
+Anyone can inspect a public website's source code and extract that key. Anyone who knows a device ID can then generate a valid activation key. This makes the current license scheme unsuitable for paid/public self-service licensing.
+
+Recommended: Keep the generator private/offline, or move generation to a server-side API that stores the secret outside the public website. A long-term stronger design uses private-key signing on the server and public-key verification in the Android application (this requires updating the Android app).

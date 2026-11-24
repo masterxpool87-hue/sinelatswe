@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b18">
+  <meta name="description" content="ဆိုင်လက်စွဲ Offline POS Android Application — အရောင်း၊ အဝယ်၊ ကုန်ပစ္စည်း၊ ကုန်ကျစရိတ်နှင့် လုပ်ငန်းစာရင်းများကို လွယ်ကူစွာ စီမံခန့်ခွဲပါ။ ဗိုလ်တထောင် Online Store မှ ဖန်တီးထားသည်။">
+  <meta name="keywords" content="ဆိုင်လက်စွဲ, ဆိုင်လက်စွဲ POS, Myanmar POS, Offline POS, Android POS, ဗိုလ်တထောင် Online Store">
+  <meta property="og:title" content="ဆိုင်လက်စွဲ | Offline POS Application">
+  <meta property="og:description" content="သင့်ဆိုင်လုပ်ငန်းအတွက် စာရင်းကိုင်တစ်ယောက်လို ကူညီပေးမယ့် Offline POS App။">
+  <meta property="og:image" content="assets/app-logo.jpg">
+  <meta property="og:type" content="website">
+  <title>ဆိုင်လက်စွဲ | Offline POS Application</title>
+  <link rel="icon" type="image/jpeg" href="assets/app-logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Myanmar:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #061410;
+      --bg-2: #0a1f19;
+      --panel: rgba(15, 39, 31, .76);
+      --panel-solid: #102a21;
+      --line: rgba(167, 243, 208, .14);
+      --text: #f1fff7;
+      --muted: #a9c4b5;
+      --green: #50e39a;
+      --green-2: #16a66a;
+      --mint: #b9ffda;
+      --gold: #ffd98a;
+      --cyan: #55e5dd;
+      --shadow: 0 22px 70px rgba(0, 0, 0, .34);
+      --radius: 24px;
+      --font: "Noto Sans Myanmar", "Myanmar Text", "Pyidaungsu", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(41, 157, 104, .16), transparent 28rem),
+        radial-gradient(circle at 92% 22%, rgba(45, 190, 178, .12), transparent 27rem),
+        linear-gradient(180deg, #061410 0%, #071b16 45%, #06130f 100%);
+      font-family: var(--font);
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: -1;
+      opacity: .16;
+      background-image: radial-gradient(rgba(199,255,222,.22) .7px, transparent .7px);
+      background-size: 27px 27px;
+      mask-image: linear-gradient(to bottom, black, transparent 82%);
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .container { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+    .section { padding: 100px 0; position: relative; }
+    .section-kicker {
+      display: inline-flex; align-items: center; gap: 9px; color: var(--green);
+      border: 1px solid rgba(80, 227, 154, .25); background: rgba(80, 227, 154, .08);
+      padding: 6px 13px; border-radius: 99px; font-size: 12px; font-weight: 800; letter-spacing: .04em;
+    }
+    .section-kicker::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 14px var(--green); }
+    .section-heading { max-width: 760px; margin-bottom: 38px; }
+    .section-heading h2 { margin: 17px 0 12px; font-size: clamp(28px, 4vw, 43px); line-height: 1.45; letter-spacing: -.04em; }
+    .section-heading p { margin: 0; color: var(--muted); font-size: 15px; }
+    .gradient-text { background: linear-gradient(100deg, #d4ffe7 8%, #50e39a 48%, #63e7dd 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .btn {
+      display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+      min-height: 50px; padding: 12px 20px; border-radius: 14px; border: 1px solid transparent;
+      cursor: pointer; font-size: 14px; font-weight: 800; transition: transform .25s, box-shadow .25s, background .25s, border-color .25s;
+    }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-primary { color: #052015; background: linear-gradient(135deg, #8bffc0, #35d58a); box-shadow: 0 10px 30px rgba(43, 212, 133, .2); }
+    .btn-primary:hover { box-shadow: 0 16px 38px rgba(43, 212, 133, .32); }
+    .btn-ghost { color: var(--text); background: rgba(255,255,255,.045); border-color: var(--line); }
+    .btn-ghost:hover { background: rgba(255,255,255,.09); border-color: rgba(125, 245, 183, .4); }
+    .btn svg { width: 18px; height: 18px; flex: 0 0 auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(18px);
+      background: rgba(5, 20, 15, .78); border-bottom: 1px solid rgba(185, 255, 218, .10);
+    }
+    .nav-wrap { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand img { width: 52px; height: 52px; border-radius: 15px; object-fit: cover; box-shadow: 0 0 26px rgba(51, 220, 155, .18); }
+    .brand-name { font-size: 18px; line-height: 1.35; font-weight: 900; white-space: nowrap; }
+    .brand-sub { display: block; color: #8fbaa4; font: 700 9px/1.6 Inter, sans-serif; letter-spacing: .16em; }
+    .nav-links { display: flex; align-items: center; gap: 22px; }
+    .nav-links a { color: #bed3c7; font-size: 12px; font-weight: 700; transition: color .2s; white-space: nowrap; }
+    .nav-links a:hover { color: var(--green); }
+    .nav-cta { min-height: 41px; padding: 9px 15px; font-size: 12px; }
+    .menu-toggle { display: none; width: 44px; height: 44px; border: 1px solid var(--line); background: rgba(255,255,255,.04); color: white; border-radius: 12px; cursor: pointer; }
+    .menu-toggle svg { width: 21px; height: 21px; }
+
+    .hero { min-height: 680px; padding: 88px 0 82px; position: relative; display: flex; align-items: center; overflow: hidden; }
+    .hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; filter: blur(2px); pointer-events: none; }
+    .hero::before { width: 480px; height: 480px; right: -120px; top: 20px; background: radial-gradient(circle, rgba(52, 216, 141, .16), transparent 68%); animation: pulse 8s ease-in-out infinite; }
+    .hero::after { width: 380px; height: 380px; left: -180px; bottom: -120px; background: radial-gradient(circle, rgba(67, 212, 204, .12), transparent 68%); animation: pulse 10s ease-in-out infinite reverse; }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 50px; align-items: center; position: relative; z-index: 1; }
+    .hero-copy { animation: rise .8s both; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 10px; color: #c8f6dc; font-size: 13px; font-weight: 700; margin-bottom: 22px; }
+    .live-dot { width: 8px; height: 8px; background: #62f2a9; border-radius: 50%; box-shadow: 0 0 0 6px rgba(98,242,169,.1), 0 0 16px #62f2a9; }
+    .hero h1 { margin: 0; font-size: clamp(43px, 6vw, 72px); line-height: 1.28; letter-spacing: -.055em; font-weight: 900; }
+    .hero h1 .small-line { display: block; font-size: .42em; line-height: 1.8; color: #bdd2c5; letter-spacing: 0; font-weight: 700; }
+    .hero-desc { color: #bdd2c6; font-size: 16px; max-width: 640px; margin: 22px 0 28px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-highlights { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 33px; color: #a4c1b1; font-size: 12px; }
+    .hero-highlights span { display: inline-flex; align-items: center; gap: 7px; }
+    .hero-highlights svg { width: 16px; color: var(--green); }
+    .hero-visual { position: relative; min-height: 480px; display: grid; place-items: center; animation: rise .9s .12s both; }
+    .orbit { position: absolute; width: min(430px, 100%); aspect-ratio: 1; border: 1px solid rgba(122, 255, 192, .16); border-radius: 50%; animation: spin 36s linear infinite; }
+    .orbit::before, .orbit::after { content: ""; position: absolute; width: 12px; height: 12px; background: var(--green); border-radius: 50%; box-shadow: 0 0 22px var(--green); }
+    .orbit::before { top: 13%; left: 18%; }
+    .orbit::after { right: 9%; bottom: 25%; width: 7px; height: 7px; background: var(--cyan); box-shadow: 0 0 22px var(--cyan); }
+    .app-orb { position: relative; width: 310px; max-width: 72%; aspect-ratio: 1; border-radius: 50%; padding: 12px; background: linear-gradient(145deg, rgba(255,255,255,.3), rgba(255,255,255,.02) 36%, rgba(80,227,154,.12)); box-shadow: 0 26px 90px rgba(0,0,0,.45), 0 0 80px rgba(48,218,150,.13); animation: float 6s ease-in-out infinite; }
+    .app-orb img { width: 100%; height: 100%; display: block; object-fit: cover; border-radius: 50%; border: 1px solid rgba(255,255,255,.24); }
+    .float-chip { position: absolute; z-index: 2; display: flex; align-items: center; gap: 10px; padding: 12px 15px; border-radius: 16px; background: rgba(11, 37, 27, .84); border: 1px solid rgba(171,255,210,.19); box-shadow: var(--shadow); backdrop-filter: blur(14px); animation: float 5s ease-in-out infinite; }
+    .float-chip svg { color: var(--green); width: 22px; height: 22px; }
+    .float-chip strong { display: block; font-size: 12px; line-height: 1.5; }
+    .float-chip small { display: block; font: 10px Inter, sans-serif; color: #98b7a5; }
+    .chip-one { left: -2%; top: 18%; }
+    .chip-two { right: -1%; bottom: 16%; animation-delay: -2s; }
+    .chip-three { right: 0; top: 12%; animation-delay: -3s; }
+    .trust-row { border-top: 1px solid rgba(185,255,218,.10); border-bottom: 1px solid rgba(185,255,218,.10); background: rgba(255,255,255,.018); }
+    .trust-inner { display: grid; grid-template-columns: repeat(4,1fr); gap: 15px; padding: 23px 0; }
+    .trust-item { display: flex; justify-content: center; align-items: center; gap: 10px; color: #c8ddd1; font-size: 12px; font-weight: 700; text-align: center; }
+    .trust-item svg { width: 20px; height: 20px; color: var(--green); flex: 0 0 auto; }
+
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+    .feature-card, .guide-card, .download-card, .contact-card, .activation-card {
+      border: 1px solid var(--line); background: linear-gradient(145deg, rgba(20,53,40,.82), rgba(9,28,21,.82));
+      border-radius: var(--radius); box-shadow: 0 16px 50px rgba(0,0,0,.12);
+    }
+    .feature-card { padding: 25px; min-height: 215px; position: relative; overflow: hidden; transition: transform .28s, border-color .28s, background .28s; }
+    .feature-card::after { content: ""; position: absolute; width: 120px; height: 120px; border-radius: 50%; right: -58px; bottom: -65px; background: rgba(80,227,154,.08); transition: transform .4s; }
+    .feature-card:hover { transform: translateY(-7px); border-color: rgba(80,227,154,.38); }
+    .feature-card:hover::after { transform: scale(1.6); }
+    .feature-icon { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 15px; background: rgba(80,227,154,.1); border: 1px solid rgba(80,227,154,.18); color: var(--green); margin-bottom: 17px; }
+    .feature-icon svg { width: 24px; height: 24px; }
+    .feature-card h3 { font-size: 17px; margin: 0 0 8px; }
+    .feature-card p { color: var(--muted); font-size: 13px; margin: 0; }
+
+    .workflow-band { background: linear-gradient(110deg, rgba(30,116,75,.22), rgba(28,110,106,.12)); border-top: 1px solid rgba(117,255,185,.12); border-bottom: 1px solid rgba(117,255,185,.12); }
+    .workflow-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 15px; }
+    .workflow-step { text-align: center; padding: 25px 16px; }
+    .step-no { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 14px; color: #062015; background: linear-gradient(135deg,#a5ffd0,#3ad98a); font: 900 14px Inter,sans-serif; box-shadow: 0 8px 25px rgba(66,220,143,.2); }
+    .workflow-step h3 { font-size: 15px; margin: 0 0 6px; }
+    .workflow-step p { margin: 0; color: var(--muted); font-size: 12px; }
+
+    .guide-list { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+    .guide-card { overflow: hidden; }
+    .guide-head { width: 100%; display: flex; align-items: center; gap: 15px; text-align: left; padding: 21px 23px; background: transparent; color: var(--text); border: 0; cursor: pointer; }
+    .guide-number { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; flex: 0 0 auto; color: var(--green); background: rgba(80,227,154,.1); font: 800 13px Inter,sans-serif; }
+    .guide-title { flex: 1; min-width: 0; }
+    .guide-title strong { display: block; font-size: 15px; }
+    .guide-title small { color: #91b09f; display: block; font-size: 11px; margin-top: 2px; }
+    .guide-chevron { color: #8ba998; transition: transform .25s; width: 20px; }
+    .guide-card.open .guide-chevron { transform: rotate(180deg); color: var(--green); }
+    .guide-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .32s ease; }
+    .guide-card.open .guide-content { grid-template-rows: 1fr; }
+    .guide-content-inner { overflow: hidden; }
+    .guide-content p, .guide-content ul { color: #b5cdbf; font-size: 13px; margin: 0; }
+    .guide-content-inner > div { padding: 0 24px 23px 76px; }
+    .guide-content ul { padding-left: 20px; }
+    .guide-content li { margin: 5px 0; }
+    .guide-content b { color: #e5fff0; }
+
+    .video-section { background: radial-gradient(ellipse at 50% 10%, rgba(36,154,103,.13), transparent 54%); }
+    .video-grid { display: grid; grid-template-columns: 1fr .8fr; gap: 35px; align-items: center; }
+    .video-frame { position: relative; overflow: hidden; border-radius: 25px; border: 1px solid rgba(150,255,196,.24); background: #000; box-shadow: 0 25px 80px rgba(0,0,0,.4); aspect-ratio: 16/9; }
+    .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .video-copy h2 { font-size: clamp(26px,3.6vw,38px); line-height: 1.5; margin: 17px 0 13px; }
+    .video-copy p { color: var(--muted); font-size: 14px; }
+    .voice-note { margin-top: 17px; border-left: 3px solid var(--gold); background: rgba(255,217,138,.07); color: #ead9ad; padding: 11px 14px; border-radius: 0 12px 12px 0; font-size: 12px; }
+
+    .download-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; align-items: stretch; }
+    .download-main { padding: 30px; border-radius: 26px; border: 1px solid rgba(112,245,171,.25); background: radial-gradient(circle at 92% 5%, rgba(75,230,155,.15), transparent 42%), linear-gradient(145deg, #143c2b, #0b2119); box-shadow: var(--shadow); }
+    .download-main h3 { margin: 0 0 9px; font-size: 23px; }
+    .download-main p { color: #b6d0c1; font-size: 13px; margin: 0 0 22px; }
+    .download-list { display: grid; gap: 11px; }
+    .download-link { display: flex; align-items: center; gap: 13px; padding: 15px 16px; background: rgba(255,255,255,.045); border: 1px solid rgba(185,255,218,.13); border-radius: 15px; transition: .25s; }
+    .download-link:hover { transform: translateX(4px); background: rgba(255,255,255,.09); border-color: rgba(120,255,184,.35); }
+    .download-symbol { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: rgba(80,227,154,.12); color: var(--green); flex: 0 0 auto; }
+    .download-symbol svg { width: 21px; height: 21px; }
+    .download-meta { flex: 1; min-width: 0; }
+    .download-meta strong { display: block; font-size: 13px; }
+    .download-meta small { display: block; color: #9ab8a7; font-size: 10px; }
+    .download-arrow { width: 18px; color: var(--green); }
+    .download-side { display: grid; gap: 18px; }
+    .mini-info { padding: 23px; border: 1px solid var(--line); border-radius: 23px; background: rgba(13,37,28,.75); }
+    .mini-info h3 { margin: 0 0 8px; font-size: 16px; }
+    .mini-info p { margin: 0; color: var(--muted); font-size: 12px; }
+    .mini-info .btn { margin-top: 15px; }
+    .notice { color: #d9d2b5; background: rgba(255,217,138,.07); border: 1px solid rgba(255,217,138,.18); border-radius: 15px; padding: 13px 15px; font-size: 11px; margin-top: 15px; }
+
+    .activation-section { background: linear-gradient(180deg, rgba(5,19,14,.0), rgba(5,19,14,.5)); }
+    .activation-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 25px; align-items: stretch; }
+    .activation-intro { padding: 32px 10px 30px 0; }
+    .activation-intro h2 { font-size: clamp(28px,3.7vw,40px); line-height: 1.5; margin: 15px 0; }
+    .activation-intro p { color: var(--muted); font-size: 14px; }
+    .trial-chip { display: inline-flex; gap: 9px; align-items: center; color: #ffe2a0; background: rgba(255,217,138,.08); border: 1px solid rgba(255,217,138,.2); border-radius: 12px; padding: 10px 13px; font-size: 12px; font-weight: 700; margin-top: 10px; }
+    .trial-chip svg { width: 18px; height: 18px; }
+    .activation-card { padding: 28px; background: linear-gradient(145deg, rgba(17,49,37,.96), rgba(8,28,21,.96)); box-shadow: 0 28px 90px rgba(0,0,0,.28); }
+    .activation-card-head { display: flex; align-items: center; gap: 13px; margin-bottom: 23px; }
+    .key-icon { width: 48px; height: 48px; display: grid; place-items: center; color: #062015; border-radius: 15px; background: linear-gradient(135deg,#b7ffda,#40d992); }
+    .key-icon svg { width: 24px; }
+    .activation-card-head h3 { margin: 0; font-size: 18px; }
+    .activation-card-head p { margin: 2px 0 0; color: #9fbeac; font-size: 11px; }
+    .field-label { display: block; color: #d8efe1; font-size: 12px; font-weight: 800; margin: 16px 0 8px; }
+    .input-wrap { position: relative; }
+    .input-wrap input { display: block; width: 100%; min-height: 54px; padding: 13px 15px; color: var(--text); background: rgba(3,17,12,.75); border: 1px solid rgba(179,255,213,.2); border-radius: 13px; outline: none; font: 600 14px Inter, var(--font); transition: border-color .2s, box-shadow .2s; }
+    .input-wrap input:focus { border-color: var(--green); box-shadow: 0 0 0 4px rgba(80,227,154,.1); }
+    .input-wrap input::placeholder { color: #688575; }
+    .activation-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+    .activation-actions .btn { flex: 1; }
+    .key-output { margin-top: 20px; padding: 18px; border-radius: 15px; background: rgba(2,16,11,.72); border: 1px dashed rgba(80,227,154,.38); text-align: center; }
+    .key-output small { display: block; color: #92b19f; font-size: 10px; letter-spacing: .08em; margin-bottom: 5px; }
+    .generated-key { min-height: 40px; display: flex; align-items: center; justify-content: center; color: #73f4ad; font: 900 clamp(22px,4vw,31px) Inter, monospace; letter-spacing: .08em; overflow-wrap: anywhere; }
+    .key-status { min-height: 25px; color: #a6c4b2; font-size: 11px; margin-top: 7px; }
+    .key-copy { width: 100%; margin-top: 12px; }
+    .security-warning { margin-top: 18px; border: 1px solid rgba(255,192,112,.25); background: rgba(255,174,90,.07); border-radius: 14px; padding: 14px 15px; color: #e7d1ae; font-size: 11px; line-height: 1.8; }
+    .security-warning strong { color: #ffd18b; }
+
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+    .store-panel { padding: 18px; border-radius: 25px; overflow: hidden; background: #f8f6e9; box-shadow: var(--shadow); }
+    .store-panel img { width: 100%; height: auto; display: block; border-radius: 15px; }
+    .contact-card { padding: 28px; }
+    .contact-card h3 { margin: 0 0 8px; font-size: 20px; }
+    .contact-card > p { color: var(--muted); font-size: 13px; margin: 0 0 22px; }
+    .contact-row { display: flex; gap: 13px; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(185,255,218,.09); }
+    .contact-row:last-of-type { border-bottom: 0; }
+    .contact-icon { flex: 0 0 auto; width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; color: var(--green); background: rgba(80,227,154,.1); }
+    .contact-icon svg { width: 19px; height: 19px; }
+    .contact-row small { display: block; color: #8fab9a; font-size: 10px; }
+    .contact-row strong { display: block; font: 700 13px Inter, var(--font); color: #e8fff0; overflow-wrap: anywhere; }
+    .social-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .social-pill { display: inline-flex; gap: 8px; align-items: center; border: 1px solid var(--line); border-radius: 12px; padding: 10px 13px; color: #d7eee0; font-size: 11px; font-weight: 800; transition: .2s; }
+    .social-pill:hover { border-color: rgba(80,227,154,.4); background: rgba(80,227,154,.08); transform: translateY(-2px); }
+    .social-pill svg { width: 17px; height: 17px; color: var(--green); }
+    .footer { padding: 35px 0 25px; border-top: 1px solid rgba(185,255,218,.10); background: rgba(2,12,8,.45); }
+    .footer-top { display: flex; justify-content: space-between; align-items: center; gap: 25px; padding-bottom: 25px; }
+    .footer-brand { display: flex; align-items: center; gap: 12px; }
+    .footer-brand img { width: 48px; height: 48px; object-fit: cover; border-radius: 13px; }
+    .footer-brand strong { display: block; font-size: 16px; }
+    .footer-brand small { display: block; color: #91ad9d; font-size: 10px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 17px; color: #a9c3b4; font-size: 11px; }
+    .footer-links a:hover { color: var(--green); }
+    .copyright { padding-top: 18px; border-top: 1px solid rgba(185,255,218,.08); display: flex; justify-content: space-between; gap: 15px; color: #789486; font-size: 10px; }
+    .back-top { position: fixed; right: 22px; bottom: 22px; z-index: 60; width: 46px; height: 46px; display: grid; place-items: center; border-radius: 15px; background: rgba(71,222,143,.9); color: #062016; box-shadow: 0 10px 35px rgba(0,0,0,.25); opacity: 0; pointer-events: none; transform: translateY(10px); transition: .25s; }
+    .back-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .back-top svg { width: 21px; }
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: .08s; } .delay-2 { transition-delay: .16s; } .delay-3 { transition-delay: .24s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-13px); } }
+    @keyframes pulse { 0%,100% { opacity: .65; transform: scale(1); } 50% { opacity: 1; transform: scale(1.12); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 960px) {
+      .nav-links { gap: 13px; }
+      .nav-links a { font-size: 11px; }
+      .hero-grid { gap: 22px; }
+      .hero-visual { min-height: 410px; }
+      .app-orb { width: 270px; }
+      .feature-grid { grid-template-columns: repeat(2,1fr); }
+      .activation-layout { grid-template-columns: 1fr 1.2fr; }
+    }
+    @media (max-width: 760px) {
+      .container { width: min(100% - 30px, 560px); }
+      .section { padding: 73px 0; }
+      .nav-wrap { min-height: 69px; }
+      .brand img { width: 45px; height: 45px; }
+      .brand-name { font-size: 16px; }
+      .menu-toggle { display: grid; place-items: center; }
+      .nav-links { position: absolute; top: 68px; left: 15px; right: 15px; display: none; flex-direction: column; align-items: stretch; gap: 0; padding: 10px; border-radius: 17px; border: 1px solid var(--line); background: rgba(7,25,18,.97); box-shadow: var(--shadow); }
+      .nav-links.open { display: flex; animation: rise .2s both; }
+      .nav-links a { padding: 12px 13px; font-size: 13px; border-radius: 10px; }
+      .nav-links a:hover { background: rgba(80,227,154,.08); }
+      .nav-cta { margin-top: 4px; }
+      .hero { min-height: unset; padding: 65px 0 55px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 5px; }
+      .hero-copy { text-align: center; }
+      .hero-eyebrow { justify-content: center; font-size: 11px; }
+      .hero h1 { font-size: clamp(42px, 12vw, 60px); }
+      .hero-desc { font-size: 13px; margin: 17px auto 22px; }
+      .hero-actions { justify-content: center; }
+      .hero-highlights { justify-content: center; gap: 12px; margin-top: 25px; font-size: 10px; }
+      .hero-visual { min-height: 345px; margin-top: 12px; }
+      .orbit { width: 315px; max-width: 88%; }
+      .app-orb { width: 225px; }
+      .float-chip { padding: 8px 10px; gap: 7px; border-radius: 12px; }
+      .float-chip svg { width: 18px; }
+      .float-chip strong { font-size: 10px; }
+      .float-chip small { font-size: 8px; }
+      .chip-one { left: 0; top: 16%; } .chip-two { right: -1%; bottom: 12%; } .chip-three { right: -1%; top: 8%; }
+      .trust-inner { grid-template-columns: repeat(2,1fr); padding: 18px 0; gap: 16px 8px; }
+      .trust-item { font-size: 10px; }
+      .section-heading { margin-bottom: 27px; }
+      .section-heading h2 { font-size: 27px; }
+      .section-heading p { font-size: 12px; }
+      .feature-grid { gap: 11px; }
+      .feature-card { min-height: unset; padding: 17px; border-radius: 18px; }
+      .feature-icon { width: 40px; height: 40px; border-radius: 12px; margin-bottom: 12px; }
+      .feature-icon svg { width: 20px; }
+      .feature-card h3 { font-size: 13px; }
+      .feature-card p { font-size: 11px; }
+      .workflow-grid { grid-template-columns: repeat(2,1fr); gap: 3px; }
+      .workflow-step { padding: 18px 8px; }
+      .workflow-step h3 { font-size: 13px; }
+      .workflow-step p { font-size: 10px; }
+      .guide-list { grid-template-columns: 1fr; gap: 11px; }
+      .guide-head { padding: 16px; gap: 11px; }
+      .guide-title strong { font-size: 13px; }
+      .guide-title small { font-size: 9px; }
+      .guide-content p, .guide-content ul { font-size: 11px; }
+      .guide-content-inner > div { padding: 0 16px 18px 65px; }
+      .video-grid { grid-template-columns: 1fr; gap: 22px; }
+      .video-copy { order: -1; }
+      .video-copy h2 { font-size: 26px; }
+      .video-copy p { font-size: 12px; }
+      .download-grid { grid-template-columns: 1fr; }
+      .download-main { padding: 21px; }
+      .download-main h3 { font-size: 19px; }
+      .download-link { padding: 12px; }
+      .activation-layout { grid-template-columns: 1fr; gap: 13px; }
+      .activation-intro { padding: 0; }
+      .activation-intro h2 { font-size: 28px; }
+      .activation-intro p { font-size: 12px; }
+      .activation-card { padding: 20px; }
+      .activation-card-head h3 { font-size: 16px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .store-panel { padding: 10px; }
+      .contact-card { padding: 21px; }
+      .footer-top { flex-direction: column; align-items: flex-start; }
+      .copyright { flex-direction: column; gap: 5px; }
+    }
+    @media (max-width: 390px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .feature-card { min-height: 145px; }
+      .hero-actions .btn { width: 100%; }
+      .activation-actions { flex-direction: column; }
+      .activation-actions .btn { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav-wrap">
+      <a class="brand" href="#home" aria-label="ဆိုင်လက်စွဲ ပင်မစာမျက်နှာ">
+        <img src="assets/app-logo.jpg" alt="ဆိုင်လက်စွဲ App Logo">
+        <span class="brand-name">ဆိုင်လက်စွဲ<span class="brand-sub">OFFLINE POS APPLICATION</span></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="မီနူးဖွင့်ရန်" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="#features">လုပ်ဆောင်ချက်များ</a>
+        <a href="#guide">အသုံးပြုနည်း</a>
+        <a href="#video">Video သင်ခန်းစာ</a>
+        <a href="#downloads">App Download</a>
+        <a href="#activation">Activate</a>
+        <a href="#contact">ဆက်သွယ်ရန်</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="hero-eyebrow"><span class="live-dot"></span> ဗိုလ်တထောင် Online Store မှ ဖန်တီးထားသည်</div>
+          <h1><span class="small-line">သင့်ဆိုင်လုပ်ငန်းအတွက်</span><span class="gradient-text">ဆိုင်လက်စွဲ</span></h1>
+          <p class="hero-desc">အရောင်း၊ အဝယ်၊ ကုန်ပစ္စည်း၊ ကုန်ကျစရိတ်နှင့် လုပ်ငန်းစာရင်းများကို စာရင်းကိုင်တစ်ယောက်ရှိသကဲ့သို့ လွယ်ကူစွာ စီမံခန့်ခွဲနိုင်မယ့် Android Offline POS Application။</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#downloads">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></svg>
+              App Download ရယူရန်
+            </a>
+            <a class="btn btn-ghost" href="#video">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4z"/></svg>
+              အသုံးပြုနည်း ကြည့်ရန်
+            </a>
+          </div>
+          <div class="hero-highlights">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18m9-9H3"/><circle cx="12" cy="12" r="9"/></svg> Offline အသုံးပြုနိုင်</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5m0 14h16M8 15l3-4 3 2 5-7"/></svg> လုပ်ငန်းစာရင်းစုံ</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.5 9.5 17 19 7.5"/></svg> Backup / Restore</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="ဆိုင်လက်စွဲ App Logo">
+          <div class="orbit"></div>
+          <div class="app-orb"><img src="assets/app-logo.jpg" alt="ဆိုင်လက်စွဲ application logo"></div>
+          <div class="float-chip chip-one"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-7"/></svg><span><strong>စာရင်းအင်း</strong><small>BUSINESS OVERVIEW</small></span></div>
+          <div class="float-chip chip-two"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v13H4zM8 7V4h8v3M8 12h8"/></svg><span><strong>ကုန်ပစ္စည်း</strong><small>INVENTORY CONTROL</small></span></div>
+          <div class="float-chip chip-three"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span><strong>အရောင်း / အဝယ်</strong><small>SALES & PURCHASES</small></span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="trust-row">
+      <div class="container trust-inner">
+        <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 5h14v14H5zM9 2v6m6-6v6M9 22v-6m6 6v-6"/></svg> Android Application</div>
+        <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg> Offline စာရင်းစနစ်</div>
+        <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5m0 14h16M8 15l3-4 3 2 5-7"/></svg> Dashboard & Charts</div>
+        <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/></svg> Voucher & Printer</div>
+      </div>
+    </div>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">APP FEATURES</span>
+          <h2>သင့်ဆိုင်လုပ်ငန်းကို <span class="gradient-text">တစ်နေရာတည်းမှာ</span> စီမံခန့်ခွဲပါ</h2>
+          <p>နေ့စဉ်လုပ်ငန်းဆောင်တာများမှ စာရင်းပြန်လည်သုံးသပ်ခြင်းအထိ လိုအပ်သည့် အဓိကလုပ်ဆောင်ချက်များကို App တစ်ခုတည်းတွင် စုစည်းထားပါသည်။</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg></div><h3>ပင်မစာမျက်နှာ (Dashboard)</h3><p>လုပ်ငန်း၏ ငွေကြေးအခြေအနေနှင့် အဓိကအချက်အလက်များကို တစ်နေရာတည်းတွင် ခြုံငုံကြည့်ရှုနိုင်ပါသည်။</p></article>
+          <article class="feature-card reveal delay-1"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3h2l2.2 11.2a2 2 0 0 0 2 1.6h8.9a2 2 0 0 0 2-1.6L22 7H6"/><circle cx="10" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M9 10h8"/></svg></div><h3>အရောင်း (Sales)</h3><p>Customer ရွေးချယ်ခြင်း၊ ပစ္စည်းထည့်ခြင်း၊ Discount၊ ပို့ဆောင်ခနှင့် ငွေပေးချေမှုများကို စီမံနိုင်ပါသည်။</p></article>
+          <article class="feature-card reveal delay-2"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7 12 3l9 4-9 4-9-4Z"/><path d="M3 7v10l9 4 9-4V7M12 11v10"/></svg></div><h3>ပစ္စည်းစာရင်း (Inventory)</h3><p>ကုန်ပစ္စည်းဓာတ်ပုံ၊ Code၊ လက်ကျန်အရေအတွက်၊ အရင်းဈေးနှင့် ရောင်းဈေးတို့ကို ထည့်သွင်းစီမံနိုင်ပါသည်။</p></article>
+          <article class="feature-card reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/><path d="m15 3 3 3"/></svg></div><h3>အဝယ်စာရင်း (Purchases)</h3><p>Supplier၊ ဝယ်ယူသည့်ရက်စွဲ၊ ပစ္စည်းနှင့် ဝယ်ဈေးများကို မှတ်တမ်းတင်ပြီး ပစ္စည်းရောက်ရှိမှုကို Stock ထဲသို့ ထည့်နိုင်ပါသည်။</p></article>
+          <article class="feature-card reveal delay-1"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h4M8 16h7"/><path d="m16 12 2 2 3-4"/></svg></div><h3>ကုန်ကျစရိတ် (Expenses)</h3><p>လုပ်ငန်းအတွက် အသုံးစရိတ်များကို မှတ်တမ်းတင်ပြီး အရောင်းနှင့် ကုန်ကျစရိတ်ကို ပြန်လည်သုံးသပ်နိုင်ပါသည်။</p></article>
+          <article class="feature-card reveal delay-2"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5m0 14h16"/><path d="M7 15v-3m5 3V7m5 8V9"/><path d="M6 5h12"/></svg></div><h3>Charts & Reports</h3><p>ရောင်းအားနှင့် ကုန်ကျစရိတ်များကို Bar၊ Pie၊ Line Chart များဖြင့် အမြင်ပိုင်းဆိုင်ရာ သုံးသပ်နိုင်ပါသည်။</p></article>
+          <article class="feature-card reveal"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M8 11h6"/></svg></div><h3>Customer & History</h3><p>ဖောက်သည်စာရင်းနှင့် အရောင်းမှတ်တမ်းများကို Customer အမည်၊ ရက်စွဲအလိုက် ရှာဖွေစစ်ဆေးနိုင်ပါသည်။</p></article>
+          <article class="feature-card reveal delay-1"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m-4-4 4 4 4-4"/><path d="M4 17v4h16v-4"/></svg></div><h3>Data Backup / Restore</h3><p>လုပ်ငန်းဒေတာများကို ဖုန်း၏ Downloads Folder ထဲသို့ Backup ထုတ်နိုင်ပြီး ပြန်လည်ရယူနိုင်ပါသည်။</p></article>
+          <article class="feature-card reveal delay-2"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/><path d="M15 15h3"/></svg></div><h3>Voucher & Bluetooth Printer</h3><p>Voucher ကို Bluetooth Printer ဖြင့် Print ထုတ်နိုင်ပြီး Image အဖြစ် Gallery ထဲသို့လည်း သိမ်းဆည်းနိုင်ပါသည်။</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section workflow-band">
+      <div class="container">
+        <div class="section-heading reveal" style="margin-bottom:18px">
+          <span class="section-kicker">SIMPLE WORKFLOW</span>
+          <h2>စတင်အသုံးပြုရန် <span class="gradient-text">ရိုးရှင်းသော အဆင့် ၄ ဆင့်</span></h2>
+        </div>
+        <div class="workflow-grid">
+          <div class="workflow-step reveal"><div class="step-no">01</div><h3>လုပ်ငန်းအချက်အလက်</h3><p>ဆိုင်အမည်၊ လိပ်စာ၊ ဖုန်းနံပါတ် ဖြည့်ပါ။</p></div>
+          <div class="workflow-step reveal delay-1"><div class="step-no">02</div><h3>ပစ္စည်းစာရင်း</h3><p>ပစ္စည်းအမည်၊ အရေအတွက်၊ အရင်းနှင့် ရောင်းဈေး ထည့်ပါ။</p></div>
+          <div class="workflow-step reveal delay-2"><div class="step-no">03</div><h3>အရောင်း / အဝယ်</h3><p>နေ့စဉ် အရောင်းနှင့် အဝယ်လုပ်ငန်းများ မှတ်တမ်းတင်ပါ။</p></div>
+          <div class="workflow-step reveal delay-3"><div class="step-no">04</div><h3>စာရင်းပြန်ကြည့်ပါ</h3><p>Dashboard၊ History နှင့် Chart များမှတစ်ဆင့် စစ်ဆေးပါ။</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="guide">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">USER GUIDE</span>
+          <h2>ဆိုင်လက်စွဲ App <span class="gradient-text">အသုံးပြုနည်း</span></h2>
+          <p>အောက်ပါအပိုင်းတစ်ခုချင်းစီကို နှိပ်ပြီး အသေးစိတ်အသုံးပြုနည်းကို ဖတ်ရှုနိုင်ပါသည်။ Video သင်ခန်းစာကိုလည်း အောက်တွင် ကြည့်ရှုနိုင်ပါသည်။</p>
+        </div>
+        <div class="guide-list">
+          <article class="guide-card open reveal">
+            <button class="guide-head" aria-expanded="true"><span class="guide-number">01</span><span class="guide-title"><strong>ပထမဆုံး စတင်အသုံးပြုခြင်း</strong><small>လုပ်ငန်းအချက်အလက်များ ဖြည့်သွင်းခြင်း</small></span><svg class="guide-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="guide-content"><div class="guide-content-inner"><div><p>App ကို စတင်အသုံးပြုရန် သင်၏လုပ်ငန်းအချက်အလက်နှင့် ကုန်ပစ္စည်းများကို ဦးစွာ ထည့်သွင်းပါ။</p><ul><li>App ၏ မည်သည့် Screen တွင်မဆို ညာဘက်အပေါ်ထောင့်ရှိ <b>Settings Icon</b> ကို နှိပ်ပါ။</li><li>“လုပ်ငန်းအချက်အလက်” အောက်တွင် <b>ဆိုင်အမည်၊ ဆိုင်လိပ်စာ၊ ဆက်သွယ်ရန် ဖုန်းနံပါတ်</b> တို့ကို ဖြည့်စွက်ပါ။</li><li><b>သိမ်းဆည်းမည်</b> ကို နှိပ်ပါ။ ဤအချက်အလက်များသည် ထုတ်လုပ်မည့် Voucher တွင် အလိုအလျောက် ပါဝင်မည်ဖြစ်သည်။</li></ul></div></div></div>
+          </article>
+          <article class="guide-card reveal">
+            <button class="guide-head" aria-expanded="false"><span class="guide-number">02</span><span class="guide-title"><strong>အဝယ်စာရင်း (Purchases)</strong><small>Supplier နှင့် ပစ္စည်းဝယ်ယူမှု မှတ်တမ်းတင်ခြင်း</small></span><svg class="guide-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="guide-content"><div class="guide-content-inner"><div><ul><li>“အဝယ်စာရင်း” Screen မှ <b>(+)</b> ခလုတ်ကို နှိပ်ပါ။</li><li>Supplier အမည်၊ ရက်စွဲ၊ ဝယ်ယူသည့်ပစ္စည်းများနှင့် ဝယ်ဈေးတို့ကို ထည့်သွင်းပြီး သိမ်းဆည်းပါ။</li><li>ပစ္စည်းများ ဆိုင်သို့ အမှန်တကယ်ရောက်ရှိလာသည့်အခါ သက်ဆိုင်ရာ အဝယ်မှတ်တမ်းရှိ <b>“ပစ္စည်းမရောက်ရှိသေးပါ”</b> ခလုတ်ကို နှိပ်ပါ။ ထိုပစ္စည်းများသည် Inventory ထဲသို့ အလိုအလျောက် ရောက်ရှိသွားမည်ဖြစ်သည်။</li></ul></div></div></div>
+          </article>
+          <article class="guide-card reveal">
+            <button class="guide-head" aria-expanded="false"><span class="guide-number">03</span><span class="guide-title"><strong>ကုန်ပစ္စည်း ထည့်သွင်းခြင်း (Inventory)</strong><small>ကုန်ပစ္စည်းအချက်အလက်နှင့် Stock စီမံခြင်း</small></span><svg class="guide-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="guide-content"><div class="guide-content-inner"><div><ul><li>အောက်ခြေ Navigation Bar မှ <b>ပစ္စည်းစာရင်း (Inventory)</b> ကို နှိပ်ပါ။</li><li>ညာဘက်အောက်ထောင့်ရှိ အပေါင်း (+) ခလုတ်ကို နှိပ်ပြီး “ပစ္စည်းအသစ် ထည့်သွင်းပါ” ကို ဖွင့်ပါ။</li><li>လိုအပ်ပါက ပစ္စည်းဓာတ်ပုံ ရွေးချယ်ပါ။ ထို့နောက် <b>ပစ္စည်းအမည်</b> (ဥပမာ Coca-Cola)၊ <b>Product Code</b> (ဥပမာ COKE001)၊ <b>လက်ကျန်အရေအတွက်</b> (ဥပမာ 50)၊ <b>အရင်းဈေး</b> (ဥပမာ 700) နှင့် <b>ရောင်းဈေး</b> (ဥပမာ 1000) တို့ကို ဖြည့်ပါ။</li><li>အားလုံးပြည့်စုံပါက <b>သိမ်းမည်</b> ကို နှိပ်ပါ။</li></ul></div></div></div>
+          </article>
+          <article class="guide-card reveal">
+            <button class="guide-head" aria-expanded="false"><span class="guide-number">04</span><span class="guide-title"><strong>အရောင်းပြုလုပ်ခြင်း (Sales)</strong><small>Customer၊ Cart၊ Discount နှင့် Voucher</small></span><svg class="guide-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="guide-content"><div class="guide-content-inner"><div><ul><li>“အရောင်း” Screen သို့သွားပြီး <b>Customer အချက်အလက်</b> မှ ရှိပြီးသား Customer ကိုရွေးပါ သို့မဟုတ် Customer အသစ်ထည့်ပါ။</li><li>Scanner Icon မှ OCR (စာသား) သို့မဟုတ် Barcode Scan ဖတ်၍ ပစ္စည်းထည့်နိုင်သည်။ “+” ခလုတ်မှလည်း ပစ္စည်းရွေးထည့်နိုင်သည်။</li><li>Cart ထဲရှိ (+) / (-) ဖြင့် အရေအတွက် ပြင်ဆင်ပါ။ အရေအတွက်သည် လက်ကားအရေအတွက်သို့ ရောက်ပါက ဈေးနှုန်းသည် လက်ကားဈေးသို့ အလိုအလျောက် ပြောင်းလဲသွားမည်ဖြစ်သည်။</li><li>လိုအပ်ပါက Discount၊ ပို့ဆောင်ခ၊ ငွေပေးချေမှုအမျိုးအစားနှင့် ပို့ဆောင်ပြီး/မပြီး Status ကို ရွေးပါ။</li><li><b>ရောင်းမည်</b> ကို နှိပ်ပါ။ Voucher ပေါ်လာပါက Bluetooth Printer ဖြင့် Print ထုတ်နိုင်သလို <b>Save as Image</b> ဖြင့် Gallery ထဲ သိမ်းနိုင်ပါသည်။</li></ul></div></div></div>
+          </article>
+          <article class="guide-card reveal">
+            <button class="guide-head" aria-expanded="false"><span class="guide-number">05</span><span class="guide-title"><strong>Dashboard နှင့် အရောင်းမှတ်တမ်း</strong><small>လုပ်ငန်းအခြေအနေ စစ်ဆေးခြင်း</small></span><svg class="guide-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="guide-content"><div class="guide-content-inner"><div><ul><li><b>Dashboard</b> တွင် အပေါ်ဆုံးကတ် ၄ ကတ်မှ အဓိကငွေကြေးဆိုင်ရာ အခြေအနေများကို ကြည့်ရှုနိုင်ပါသည်။ Charts များတွင် ရောင်းအားနှင့် ကုန်ကျစရိတ်ကို Bar၊ Pie၊ Line Chart များဖြင့် သုံးသပ်နိုင်ပါသည်။</li><li>“အရောင်း” Screen မှ <b>မှတ်တမ်းကြည့်ရန်</b> ကို နှိပ်ပါ။ အရောင်းမှတ်တမ်းများကို ရက်စွဲအလိုက် အုပ်စုဖွဲ့ပြသပါမည်။</li><li>မှန်ဘီလူး Icon ဖြင့် Customer အမည်၊ ပြက္ခဒိန် Icon ဖြင့် ရက်စွဲအလိုက် Filter လုပ်နိုင်ပါသည်။</li><li>မှတ်တမ်းကို ဖွင့်ပြီး <b>Mark as Paid</b>၊ <b>Mark as Delivered</b> စသည်ဖြင့် Status ပြောင်းနိုင်သည်။ ခဲတံ Icon ဖြင့် ပြင်ဆင်နိုင်ပြီး အမှိုက်ပုံး Icon ဖြင့် Cancel လုပ်နိုင်ပါသည်။ Cancel လုပ်ပါက ပစ္စည်းလက်ကျန်များ မူလအတိုင်း ပြန်ဖြစ်သွားမည်ဖြစ်သည်။</li></ul></div></div></div>
+          </article>
+          <article class="guide-card reveal">
+            <button class="guide-head" aria-expanded="false"><span class="guide-number">06</span><span class="guide-title"><strong>Settings၊ လုံခြုံရေးနှင့် Data စီမံခန့်ခွဲမှု</strong><small>License၊ PIN၊ Backup၊ CSV နှင့် Printer</small></span><svg class="guide-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="guide-content"><div class="guide-content-inner"><div><ul><li><b>License Information</b> တွင် Trial / Activated အခြေအနေကို ကြည့်ရှုပြီး Activate လုပ်နိုင်ပါသည်။</li><li><b>လုံခြုံရေး</b> မှ App ကို PIN Lock ဖြင့် ကာကွယ်ခြင်း၊ PIN ပြောင်းလဲခြင်း ပြုလုပ်နိုင်ပါသည်။</li><li><b>ဖောက်သည်များစာရင်း</b> မှ Customer များနှင့် ၎င်းတို့၏ အရောင်းမှတ်တမ်းများကို ကြည့်ရှုနိုင်ပါသည်။</li><li><b>Data Backup / Restore</b> ဖြင့် Downloads Folder ထဲသို့ Backup ထုတ်ခြင်း၊ ပြန်လည်ရယူခြင်း ပြုလုပ်နိုင်ပါသည်။</li><li><b>Excel Export</b> မှ အရောင်းစာရင်းနှင့် ပစ္စည်းစာရင်းများကို CSV File အဖြစ် Export ထုတ်နိုင်ပါသည်။</li><li><b>Printer Settings</b> တွင် Bluetooth Printer အမျိုးအစား 58mm / 80mm အလိုက် စာတစ်ကြောင်းရှိ စာလုံးအရေအတွက်ကို ချိန်ညှိနိုင်ပါသည်။</li></ul></div></div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section video-section" id="video">
+      <div class="container video-grid">
+        <div class="video-frame reveal">
+          <iframe src="https://www.youtube-nocookie.com/embed/ejK-yS4P9ak" title="ဆိုင်လက်စွဲ Offline POS အသုံးပြုနည်း" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="video-copy reveal delay-1">
+          <span class="section-kicker">VIDEO TUTORIAL</span>
+          <h2>Video ထဲမှာ <span class="gradient-text">အသေးစိတ် လေ့လာကြည့်ပါ</span></h2>
+          <p>“ဆိုင်လက်စွဲ” ကုန်ရောင်း/ကုန်ဝယ် Application အသုံးပြုနည်းကို YouTube Video ထဲတွင် အဆင့်ဆင့် ရှင်းပြထားပါသည်။ App ကို စတင်အသုံးပြုမည့်သူများအနေဖြင့် Video ကို ကြည့်ရှုပြီး လေ့လာနိုင်ပါသည်။</p>
+          <div class="voice-note">မှတ်ချက် — Video ရိုက်ကူးချိန်တွင် အသံမကျန်းမာသေးသဖြင့် အသံအနေအထားကို သည်းခံပေးပါရန် မေတ္တာရပ်ခံအပ်ပါသည်။</div>
+          <a class="btn btn-primary" style="margin-top:20px" href="https://www.youtube.com/watch?v=ejK-yS4P9ak" target="_blank" rel="noopener">
+            YouTube မှာ ကြည့်ရန်
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="downloads">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">DOWNLOAD CENTER</span>
+          <h2>ဆိုင်လက်စွဲ App <span class="gradient-text">Download ရယူရန်</span></h2>
+          <p>အောက်ပါ Download Link များထဲမှ တစ်ခုကို ရွေးချယ်ပြီး Android Application ကို ရယူနိုင်ပါသည်။ Link တစ်ခု အဆင်မပြေပါက အခြား Download Mirror ကို အသုံးပြုပါ။</p>
+        </div>
+        <div class="download-grid">
+          <div class="download-main reveal">
+            <h3>ဆိုင်လက်စွဲ OFFLINE POS</h3>
+            <p>Android ဖုန်းတွင် Install လုပ်ပြီး စတင်အသုံးပြုနိုင်ပါသည်။ Install မလုပ်မီ မိမိရယူထားသော APK File ၏ ရင်းမြစ်ကို စစ်ဆေးပါ။</p>
+            <div class="download-list">
+              <a class="download-link" href="https://www.mediafire.com/file/j1i013urnl8jr7a/%25E1%2580%2586%25E1%2580%25AD%25E1%2580%25AF%25E1%2580%2584%25E1%2580%25BA%25E1%2580%259C%25E1%2580%2580%25E1%2580%25BA%25E1%2580%2585%25E1%2580%25BD%25E1%2580%25B2_OFFLINE_POS.apk/file" target="_blank" rel="noopener">
+                <span class="download-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-4-4 4 4 4-4"/><path d="M4 17v4h16v-4"/></svg></span>
+                <span class="download-meta"><strong>Download Link 01 — MediaFire</strong><small>ဆိုင်လက်စွဲ OFFLINE POS APK</small></span>
+                <svg class="download-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+              </a>
+              <a class="download-link" href="https://drive.google.com/file/d/1n4ov30-mxxxm44cy8YLjqLpxvOnVnsPD/view" target="_blank" rel="noopener">
+                <span class="download-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17 9 7h6l5 10-3 4H7z"/><path d="m9 7 5 10M4 17h16"/></svg></span>
+                <span class="download-meta"><strong>Download Link 02 — Google Drive</strong><small>အခြား Download ရယူနိုင်သည့် Link</small></span>
+                <svg class="download-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+              </a>
+              <a class="download-link" href="https://www.upload-apk.com/en/elDxPc6d3lHuTcg" target="_blank" rel="noopener">
+                <span class="download-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4m-4 4 4-4 4 4"/><path d="M4 14v6h16v-6"/></svg></span>
+                <span class="download-meta"><strong>Download Link 03 — Upload-Apk</strong><small>အစားထိုး Download Mirror</small></span>
+                <svg class="download-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+              </a>
+            </div>
+            <div class="notice">မှတ်ချက် — ဤ Website တွင် Download Link များကို ပေးထားခြင်းဖြစ်ပြီး Hosting ဝန်ဆောင်မှုများ၏ လက်ရှိအခြေအနေကို ဤနေရာမှ အာမမခံနိုင်ပါ။ Download မရပါက အခြား Link ကို စမ်းသုံးပါ။</div>
+          </div>
+          <div class="download-side">
+            <div class="mini-info reveal delay-1"><h3>App အသေးစိတ်နှင့် အသုံးပြုနည်း</h3><p>App အကြောင်း အချက်အလက်များ၊ အသုံးပြုနည်းများနှင့် အခြားအသေးစိတ်များကို Official Information Page တွင် ဝင်ရောက်လေ့လာနိုင်ပါသည်။</p><a class="btn btn-ghost" href="https://sites.google.com/view/sinelatswe/home" target="_blank" rel="noopener">အသေးစိတ် ကြည့်ရန် <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg></a></div>
+            <div class="mini-info reveal delay-2"><h3>Trial အသုံးပြုခွင့်</h3><p>App ကို Install လုပ်ပြီးနောက် Trial ကာလ ၃ နာရီ အသုံးပြုနိုင်ပါသည်။ ဆက်လက်အသုံးပြုရန် Activation ပြုလုပ်ရန် လိုအပ်ပါသည်။</p><a class="btn btn-primary" href="#activation">Activation အပိုင်းသို့ သွားရန် <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 10 5 5 5-5"/></svg></a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section activation-section" id="activation">
+      <div class="container activation-layout">
+        <div class="activation-intro reveal">
+          <span class="section-kicker">ACTIVATION CENTER</span>
+          <h2>App ကို ဆက်လက်အသုံးပြုရန် <span class="gradient-text">Activate လုပ်ပါ</span></h2>
+          <p>ဆိုင်လက်စွဲ App ကို Install လုပ်ပြီး ၃ နာရီအကြာတွင် Trial ကာလ ပြည့်ဆုံးပါက ဆက်လက်အသုံးပြုရန် Activation Key လိုအပ်ပါသည်။</p>
+          <div class="trial-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Trial Duration — 3 Hours</div>
+          <p style="margin-top:22px">Activation အတွက် App ထဲမှ မိမိ၏ <b style="color:#eafff1">Device ID</b> ကို ကူးယူပြီး အောက်ပါနေရာတွင် ထည့်သွင်းပါ။ ထုတ်ပေးသော Key ကို App ၏ Activation Screen တွင် ရိုက်ထည့်ပါ။</p>
+        </div>
+        <div class="activation-card reveal delay-1">
+          <div class="activation-card-head">
+            <div class="key-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="5"/><path d="m11.5 11.5 8-8L22 6l-3 3 2 2-3 3-2-2-3 3"/></svg></div>
+            <div><h3>Activation Key Generator</h3><p>ဆိုင်လက်စွဲ — Device ID ဖြင့် Key ထုတ်ပေးရန်</p></div>
+          </div>
+          <label class="field-label" for="deviceId">ANDROID DEVICE ID</label>
+          <div class="input-wrap"><input id="deviceId" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="App ထဲမှ Device ID ကို ထည့်ပါ"></div>
+          <div class="activation-actions">
+            <button class="btn btn-primary" id="generateBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 14 .9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z"/></svg> Generate Key</button>
+            <button class="btn btn-ghost" id="clearBtn" type="button">Clear</button>
+          </div>
+          <div class="key-output" aria-live="polite">
+            <small>YOUR ACTIVATION KEY</small>
+            <div class="generated-key" id="generatedKey">XXXX-XXXX-XX</div>
+            <div class="key-status" id="keyStatus">Device ID ထည့်ပြီး Generate Key ကို နှိပ်ပါ။</div>
+            <button class="btn btn-ghost key-copy" id="copyKeyBtn" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg> Activation Key Copy ကူးရန်</button>
+          </div>
+          <div class="security-warning"><strong>လုံခြုံရေး သတိပေးချက် —</strong> ဤ Generator သည် လက်ရှိ Android App ၏ SHA-256 နည်းလမ်းနှင့် ကိုက်ညီစေရန် Browser ထဲတွင် Key ထုတ်ပေးပါသည်။ GitHub Pages သည် Public Website ဖြစ်သောကြောင့် ထည့်သွင်းထားသော Secret Key ကို Website Source Code မှ ကြည့်ရှုနိုင်ပြီး Website ဝင်ကြည့်သူတိုင်း Key ထုတ်နိုင်ပါသည်။ ဤနည်းလမ်းကို အခကြေးငွေပေးပြီးမှ Activate လုပ်စေလိုသည့် License စနစ်အဖြစ် လုံခြုံသည်ဟု မယူဆပါနှင့်။ ဆိုင်ဝန်ထမ်း/အုပ်ချုပ်သူများသာ သုံးရန် ရည်ရွယ်ပါက Server-side Generator နှင့် လုံခြုံသော API လိုအပ်ပါသည်။</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="section-kicker">ABOUT THE DEVELOPER</span>
+          <h2><span class="gradient-text">ဗိုလ်တထောင် Online Store</span> မှ ဖန်တီးထားသည်</h2>
+          <p>ဆိုင်လက်စွဲ Android Application ကို ဗိုလ်တထောင် Online Store မှ ဖန်တီးထားပါသည်။ App နှင့်ပတ်သက်သော သတင်းအချက်အလက်များ၊ အကူအညီနှင့် ဆက်သွယ်ရန် အောက်ပါ Official Page များကို အသုံးပြုနိုင်ပါသည်။</p>
+        </div>
+        <div class="contact-grid">
+          <div class="store-panel reveal"><img src="assets/store-logo.jpg" alt="ဗိုလ်တထောင် Online Store Logo နှင့် ဆက်သွယ်ရန်အချက်အလက်"></div>
+          <div class="contact-card reveal delay-1">
+            <h3>ဆက်သွယ်ရန် အချက်အလက်များ</h3>
+            <p>App အကြောင်း မေးမြန်းလိုပါက သို့မဟုတ် အကူအညီလိုအပ်ပါက Official Facebook Page မှ ဆက်သွယ်နိုင်ပါသည်။</p>
+            <div class="contact-row"><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.5 2.8a2 2 0 0 1-.6 1.8L7.7 9.6a16 16 0 0 0 6.7 6.7l1.3-1.3a2 2 0 0 1 1.8-.6l2.8.5a2 2 0 0 1 1.7 2Z"/></svg></span><span><small>Phone / Viber</small><strong>09 8892 99474</strong></span></div>
+            <div class="contact-row"><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.5 2.8a2 2 0 0 1-.6 1.8L7.7 9.6a16 16 0 0 0 6.7 6.7l1.3-1.3a2 2 0 0 1 1.8-.6l2.8.5a2 2 0 0 1 1.7 2Z"/></svg></span><span><small>Phone</small><strong>09 7304 0460</strong></span></div>
+            <div class="contact-row"><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h4"/></svg></span><span><small>Hotline</small><strong>01-9010829</strong></span></div>
+            <div class="contact-row"><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span><small>ဆိုင်လိပ်စာ (Address)</small><strong style="font-family:var(--font);font-size:12px">အမှတ် ၉/၁၁၊ ၅၃ လမ်း (အောက်ဘက်လမ်း)၊ ဗိုလ်တထောင်မြို့နယ်၊ ရန်ကုန်မြို့။</strong></span></div>
+            <div class="social-row">
+              <a class="social-pill" href="https://www.facebook.com/shoplatswe/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.3V13h2.8v8h3.4Z"/></svg> ဆိုင်လက်စွဲ Facebook</a>
+              <a class="social-pill" href="https://www.facebook.com/bo1000ygn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.3V13h2.8v8h3.4Z"/></svg> ဗိုလ်တထောင် Online Store</a>
+            </div>
+            <div class="social-row" style="margin-top:10px">
+              <a class="social-pill" href="https://sites.google.com/view/sinelatswe/home" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg> Official Information Website</a>
+              <span class="social-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> TikTok: @bo1000store</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand"><img src="assets/app-logo.jpg" alt="ဆိုင်လက်စွဲ Logo"><span><strong>ဆိုင်လက်စွဲ</strong><small>Developed by ဗိုလ်တထောင် Online Store</small></span></div>
+        <div class="footer-links"><a href="#features">Features</a><a href="#guide">User Guide</a><a href="#downloads">Download</a><a href="#activation">Activation</a><a href="#contact">Contact</a></div>
+      </div>
+      <div class="copyright"><span>© <span id="year"></span> ဆိုင်လက်စွဲ Offline POS Application. All rights reserved.</span><span>Created with care by ဗိုလ်တထောင် Online Store</span></div>
+    </div>
+  </footer>
+
+  <a class="back-top" id="backTop" href="#home" aria-label="အပေါ်သို့ ပြန်သွားရန်"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg></a>
+
+  <script>
+    // =========================================================
+    // ဆိုင်လက်စွဲ - Activation Key Generator
+    // Must match LicenseManager.kt exactly:
+    // SHA-256("${deviceId}-${SECRET_KEY}").take(10).uppercase()
+    // =========================================================
+    const SECRET_KEY = "My-Super-Secret-POS-App-2025-For-Everyone";
+
+    const deviceInput = document.getElementById("deviceId");
+    const generatedKey = document.getElementById("generatedKey");
+    const keyStatus = document.getElementById("keyStatus");
+    const generateBtn = document.getElementById("generateBtn");
+    const copyKeyBtn = document.getElementById("copyKeyBtn");
+    let currentKey = "";
+
+    async function sha256Hex(text) {
+      if (!window.crypto || !window.crypto.subtle || !window.TextEncoder) {
+        throw new Error("ဤ Browser တွင် Secure SHA-256 မရနိုင်ပါ။ HTTPS ဖြင့်ဖွင့်ပါ (GitHub Pages URL ကို အသုံးပြုပါ)။");
+      }
+      const encoded = new TextEncoder().encode(text);
+      const digest = await window.crypto.subtle.digest("SHA-256", encoded);
+      return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function createActivationKey(deviceId) {
+      const cleanDeviceId = deviceId.trim();
+      if (!cleanDeviceId) throw new Error("Device ID ကို အရင်ထည့်ပေးပါ။");
+      // Keep original Device ID case: Android code does not lowercase it.
+      const combinedString = `${cleanDeviceId}-${SECRET_KEY}`;
+      const hash = await sha256Hex(combinedString);
+      const rawKey = hash.substring(0, 10).toUpperCase();
+      return `${rawKey.substring(0, 4)}-${rawKey.substring(4, 8)}-${rawKey.substring(8, 10)}`;
+    }
+
+    generateBtn.addEventListener("click", async () => {
+      const deviceId = deviceInput.value.trim();
+      if (!deviceId) {
+        keyStatus.textContent = "Device ID ကို ထည့်ပေးပါ။";
+        deviceInput.focus();
+        return;
+      }
+      generateBtn.disabled = true;
+      generateBtn.textContent = "Generating...";
+      keyStatus.textContent = "Activation Key ထုတ်ပေးနေပါသည်...";
+      try {
+        currentKey = await createActivationKey(deviceId);
+        generatedKey.textContent = currentKey;
+        keyStatus.textContent = "Activation Key ထုတ်ပေးပြီးပါပြီ။ App ထဲတွင် ထည့်သွင်းပါ။";
+        copyKeyBtn.disabled = false;
+      } catch (error) {
+        currentKey = "";
+        generatedKey.textContent = "XXXX-XXXX-XX";
+        keyStatus.textContent = error.message || "Key ထုတ်မရပါ။ ထပ်မံကြိုးစားပါ။";
+        copyKeyBtn.disabled = true;
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 14 .9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z"/></svg> Generate Key';
+      }
+    });
+
+    copyKeyBtn.addEventListener("click", async () => {
+      if (!currentKey) return;
+      try {
+        await navigator.clipboard.writeText(currentKey);
+        keyStatus.textContent = "Activation Key ကို Copy ကူးပြီးပါပြီ။";
+      } catch (_) {
+        const temp = document.createElement("textarea");
+        temp.value = currentKey;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+        keyStatus.textContent = "Activation Key ကို Copy ကူးပြီးပါပြီ။";
+      }
+    });
+
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      deviceInput.value = "";
+      generatedKey.textContent = "XXXX-XXXX-XX";
+      currentKey = "";
+      copyKeyBtn.disabled = true;
+      keyStatus.textContent = "Device ID ထည့်ပြီး Generate Key ကို နှိပ်ပါ။";
+      deviceInput.focus();
+    });
+
+    deviceInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") generateBtn.click();
+    });
+
+    // Mobile navigation
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+    navLinks.querySelectorAll("a").forEach(link => link.addEventListener("click", () => {
+      navLinks.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+    }));
+
+    // Accordion guide cards
+    document.querySelectorAll(".guide-head").forEach(button => {
+      button.addEventListener("click", () => {
+        const card = button.closest(".guide-card");
+        const open = card.classList.toggle("open");
+        button.setAttribute("aria-expanded", String(open));
+      });
+    });
+
+    // Reveal animations (respects reduced-motion preference)
+    const revealItems = document.querySelectorAll(".reveal");
+    if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealItems.forEach(item => observer.observe(item));
+    } else {
+      revealItems.forEach(item => item.classList.add("visible"));
+    }
+
+    // Back to top and footer year
+    const backTop = document.getElementById("backTop");
+    window.addEventListener("scroll", () => {
+      backTop.classList.toggle("show", window.scrollY > 500);
+    }, { passive: true });
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
